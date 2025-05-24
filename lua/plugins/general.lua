@@ -56,10 +56,6 @@ return {
   -- Remove copilot from the sources in blick (I prefer the ghost text)
   {
     "saghen/blink.cmp",
-    keymap = {
-      preset = "none",
-    },
-
     opts = function(_, opts)
       -- Create a new sources table, excluding 'copilot'
       local new_default_sources = {}
