@@ -32,6 +32,59 @@ return {
       },
     },
   },
+  {
+    "zbirenbaum/copilot.lua",
+    opts = {
+      suggestion = {
+        enabled = true, -- Crucial for ghost text
+        auto_trigger = true, -- Copilot suggests as you type
+        keymap = {
+          accept = "<c-cr>", -- Primary key to accept ghost text
+          next = "<c-[>", -- Cycle to the next ghost text suggestion (e.g., Alt + ])
+          prev = "<c-]>", -- Cycle to the previous ghost text suggestion (e.g., Alt + [)
+          -- You can also add:
+          accept_word = "<c-w>", -- Accept the next word of the suggestion
+          accept_line = "<c-l>", -- Accept the entire line of the suggestion
+          -- dismiss = "<C-]>",    -- Dismiss the current ghost text suggestion
+        },
+      },
+      panel = {
+        enabled = false, -- Most users prefer inline ghost text over a separate panel
+      },
+    },
+  },
+  -- Remove copilot from the sources in blick (I prefer the ghost text)
+  {
+    "saghen/blink.cmp",
+    keymap = {
+      preset = "none",
+    },
+
+    opts = function(_, opts)
+      -- Create a new sources table, excluding 'copilot'
+      local new_default_sources = {}
+      for _, source_name in ipairs(opts.sources.default or {}) do
+        if source_name ~= "copilot" then
+          table.insert(new_default_sources, source_name)
+        end
+      end
+      opts.sources.default = new_default_sources
+
+      -- Also, ensure 'copilot' is not defined as a provider
+      -- This might be redundant if it's not a source, but good for completeness.
+      if opts.sources.providers and opts.sources.providers.copilot then
+        opts.sources.providers.copilot = nil
+      end
+
+      return opts
+    end,
+  },
+  {
+    "saghen/blink.compat",
+    optional = true, -- make optional so it's only enabled if any extras need it
+    opts = {},
+    version = not vim.g.lazyvim_blink_main and "*",
+  },
   { import = "lazyvim.plugins.extras.lang.typescript" },
   {
     "folke/trouble.nvim",
